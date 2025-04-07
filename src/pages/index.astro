@@ -1,0 +1,17 @@
+---
+import Hero from '../components/Hero.astro';
+import Layout from '../layouts/Layout.astro';
+
+---
+
+<Layout>
+    <Hero />
+</Layout>
+
+
+<style>
+  body:not(.has-token) main {
+    display: none;
+  }
+</style>
+

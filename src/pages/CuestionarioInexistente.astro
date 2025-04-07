@@ -1,0 +1,126 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Cuestionario no encontrado">
+    <section class="relative min-h-screen w-full overflow-hidden">
+        <!-- Fondo similar al Hero -->
+        <div class="bg-[url(/src/assets/images/main-background.jpg)] bg-cover bg-center bg-no-repeat bg-fixed absolute inset-0 w-full h-full">
+        </div>
+        <div class="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
+        
+        <!-- Contenido principal -->
+        <div class="flex flex-col items-center justify-center min-h-screen p-4 relative z-10">
+            <div class="w-full max-w-3xl bg-gray-800/90 backdrop-blur-sm rounded-lg shadow-xl overflow-hidden p-8 text-center">
+                <div class="mb-8">
+                    <svg class="w-20 h-20 mx-auto text-red-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+                
+                <h1 class="text-3xl font-bold text-white mb-4">Cuestionario no encontrado</h1>
+                <p class="text-lg text-white/80 mb-6">
+                    El cuestionario que buscas no existe o el identificador es incorrecto.
+                </p>
+                <div class="h-1 w-3/4 mx-auto bg-gradient-to-r from-red-500 to-blue-500 rounded-full mb-8"></div>
+                
+                <div class="mt-10 pt-6">
+                    <h2 class="text-xl font-semibold text-white mb-4">¿Tienes otro código de cuestionario?</h2>
+                    <p class="text-white/70 mb-6">Ingrésalo a continuación para continuar</p>
+                    
+                    <div class="flex flex-col space-y-4 max-w-md mx-auto">
+                        <input 
+                            type="text" 
+                            id="quest-token" 
+                            class="w-full p-3 bg-gray-700/80 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Ingresa el código del cuestionario"
+                        >
+                        <button 
+                            id="continue-btn"
+                            class="w-full px-6 py-3 bg-blue-700 hover:bg-blue-800 rounded-md shadow-lg shadow-blue-900/30 transition-all duration-300 text-white font-medium"
+                        >
+                            Continuar
+                        </button>
+                    </div>
+<!--                     
+                    <div class="mt-6">
+                        <a href="/" class="text-blue-400 hover:text-blue-300 transition-colors">
+                            Volver a la página de inicio
+                        </a>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Watermark -->
+        <div class="watermark-container">
+            <div class="watermark">labsystec.net</div>
+        </div>
+    </section>
+</Layout>
+
+<style>
+    .watermark-container {
+        position: absolute;
+        bottom: 1rem;
+        right: 1rem;
+        z-index: 20;
+        width: 140px;
+        height: 40px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
+    }
+    
+    .watermark {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0);
+        transition: all 0.5s ease;
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    
+    .watermark-container:hover .watermark {
+        color: rgba(255, 255, 255, 0.8);
+        transform: translateY(0);
+        opacity: 1;
+    }
+    
+    button:active {
+        transform: scale(0.98);
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const continueBtn = document.getElementById('continue-btn');
+        const tokenInput = document.getElementById('quest-token') as HTMLInputElement;
+        
+        if (continueBtn && tokenInput) {
+            continueBtn.addEventListener('click', () => {
+                handleRedirect();
+            });
+            
+            // También permitir enviar con Enter desde el input
+            tokenInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    handleRedirect();
+                }
+            });
+        }
+        
+        function handleRedirect() {
+            const newToken = tokenInput.value.trim();
+            if (!newToken) {
+                alert('Por favor, ingresa un código de cuestionario válido.');
+                return;
+            }
+            
+            // Redirigir al inicio con el nuevo token como parámetro
+            window.location.replace(`/?quest=${newToken}`);
+        }
+    });
+</script>

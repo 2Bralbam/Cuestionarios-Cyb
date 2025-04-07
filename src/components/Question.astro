@@ -1,0 +1,81 @@
+---
+export interface Props {
+    id: string;
+    pregunta: string;
+    respuestas: string[];
+    correcta?: number;
+}
+
+const { id, pregunta, respuestas, correcta = -1 } = Astro.props;
+---
+
+<div id={`question-${id}`} class="question-card w-full max-w-3xl bg-gray-800/90 backdrop-blur-sm rounded-lg shadow-xl overflow-hidden transition-all duration-500 transform">
+    <div class="p-6 border-b border-gray-700">
+        <h3 class="text-2xl font-semibold text-white mb-2">{pregunta}</h3>
+    </div>
+    
+    <div class="p-6">
+        <div class="flex flex-col space-y-3">
+            {respuestas.map((respuesta, index) => (
+                <label class="option-container relative">
+                    <input 
+                        type="radio" 
+                        name={`question-${id}`} 
+                        value={index} 
+                        class="hidden peer" 
+                        data-correct={index === correcta}
+                    />
+                    <div class="p-4 bg-gray-700/80 rounded-md cursor-pointer transition-all duration-300 
+                                border-2 border-transparent hover:border-blue-500 
+                                peer-checked:bg-blue-600 peer-checked:border-blue-400 peer-checked:shadow-lg">
+                        <span class="text-white">{respuesta}</span>
+                    </div>
+                </label>
+            ))}
+        </div>
+    </div>
+</div>
+
+<style>
+    .question-card {
+        --tw-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+        box-shadow: var(--tw-shadow);
+    }
+    
+    .option-container input[type="radio"]:checked + div {
+        --tw-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.2), 0 2px 4px -1px rgba(59, 130, 246, 0.1);
+        box-shadow: var(--tw-shadow);
+    }
+    
+    /* Efecto hover para opciones */
+    .option-container:hover div {
+        transform: translateY(-1px);
+    }
+</style>
+
+<script define:vars={{ id }}>
+document.addEventListener('DOMContentLoaded', () => {
+    // Guardar respuesta seleccionada
+    const questionCard = document.getElementById(`question-${id}`);
+    const options = questionCard.querySelectorAll('input[type="radio"]');
+    
+    options.forEach(option => {
+        option.addEventListener('change', (e) => {
+            const selectedValue = e.target.value;
+            // Guardar respuesta en localStorage
+            localStorage.setItem(`answer-${id}`, selectedValue);
+            
+            // Emitir evento de respuesta seleccionada
+            const event = new CustomEvent('answer-selected', {
+                bubbles: true,
+                detail: { 
+                    questionId: id, 
+                    selectedAnswer: parseInt(selectedValue),
+                    isCorrect: e.target.dataset.correct === 'true'
+                }
+            });
+            questionCard.dispatchEvent(event);
+        });
+    });
+});
+</script>
